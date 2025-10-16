@@ -1,10 +1,10 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -22,11 +22,15 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findStudent(long id) {
-        return studentRepository.findById(id).get();
+        return studentRepository.findById(id).orElse(null);
     }
 
     @Override
     public Student editStudent(Long id, Student student) {
+        if (studentRepository.existsById(id)) {
+            return null;
+        }
+        student.setId(id);
         return studentRepository.save(student);
     }
 
@@ -36,14 +40,18 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Collection<Student> findByAge(int age) {
-        return studentRepository.findAll().stream()
-                .filter(student -> student.getAge() == age)
-                .collect(Collectors.toList());
+    public Collection<Student> getAllStudents() {
+        return studentRepository.findAll();
     }
 
     @Override
-    public Collection<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public Collection<Student> findByAgeBetween(int minAge, int maxAge) {
+        return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    @Override
+    public Faculty getFacultyByStudentId(Long studentId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        return student != null ? student.getFaculty() : null;
     }
 }
