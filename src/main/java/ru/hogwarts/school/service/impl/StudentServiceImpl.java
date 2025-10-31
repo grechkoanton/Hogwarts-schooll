@@ -1,9 +1,10 @@
-package ru.hogwarts.school.service;
+package ru.hogwarts.school.service.impl;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
+import ru.hogwarts.school.service.StudentService;
 import java.util.*;
 
 @Service
@@ -27,7 +28,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student editStudent(Long id, Student student) {
-        if (studentRepository.existsById(id)) {
+        if (!studentRepository.existsById(id)) {
             return null;
         }
         student.setId(id);
