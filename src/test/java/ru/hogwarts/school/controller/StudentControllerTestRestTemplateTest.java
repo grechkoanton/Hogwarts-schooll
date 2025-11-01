@@ -8,11 +8,14 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repositories.StudentRepository;
 import java.util.Collection;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 class StudentControllerTestRestTemplateTest {
 
     @LocalServerPort
@@ -21,11 +24,15 @@ class StudentControllerTestRestTemplateTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private StudentRepository studentRepository;
+
     private String baseUrl;
 
     @BeforeEach
     void setUp() {
         baseUrl = "http://localhost:" + port + "/student";
+        studentRepository.deleteAll();
     }
 
     @Test
