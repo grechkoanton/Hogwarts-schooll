@@ -45,7 +45,8 @@ class FacultyControllerTestRestTemplateTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getId()).isNotNull();
-        assertThat(response.getBody().getName()).isEqualTo("Gryffindor");
+        assertThat(response.getBody().getName()).isEqualTo(faculty.getName());
+        assertThat(response.getBody().getColor()).isEqualTo(faculty.getColor());
     }
 
     @Test
@@ -60,7 +61,8 @@ class FacultyControllerTestRestTemplateTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getName()).isEqualTo("Slytherin");
+        assertThat(response.getBody().getName()).isEqualTo(faculty.getName());
+        assertThat(response.getBody().getColor()).isEqualTo(faculty.getColor());
     }
 
     @Test
@@ -109,7 +111,8 @@ class FacultyControllerTestRestTemplateTest {
 
         ResponseEntity<Faculty> response = restTemplate.getForEntity(
                 baseUrl + "/" + createdFaculty.getId(), Faculty.class);
-        assertThat(response.getBody().getName()).isEqualTo("Updated Faculty");
+        assertThat(response.getBody().getName()).isEqualTo(updatedFaculty.getName());
+        assertThat(response.getBody().getColor()).isEqualTo(updatedFaculty.getColor());
     }
 
     @Test

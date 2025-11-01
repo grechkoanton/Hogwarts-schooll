@@ -46,7 +46,8 @@ class StudentControllerTestRestTemplateTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getId()).isNotNull();
-        assertThat(response.getBody().getName()).isEqualTo("Harry Potter");
+        assertThat(response.getBody().getName()).isEqualTo(student.getName());
+        assertThat(response.getBody().getAge()).isEqualTo(student.getAge());
     }
 
     @Test
@@ -61,7 +62,8 @@ class StudentControllerTestRestTemplateTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getName()).isEqualTo("Hermione Granger");
+        assertThat(response.getBody().getName()).isEqualTo(student.getName());
+        assertThat(response.getBody().getAge()).isEqualTo(student.getAge());
     }
 
     @Test
@@ -116,7 +118,8 @@ class StudentControllerTestRestTemplateTest {
 
         ResponseEntity<Student> response = restTemplate.getForEntity(
                 baseUrl + "/" + createdStudent.getId(), Student.class);
-        assertThat(response.getBody().getName()).isEqualTo("Updated Name");
+        assertThat(response.getBody().getName()).isEqualTo(updatedStudent.getName());
+        assertThat(response.getBody().getAge()).isEqualTo(updatedStudent.getAge());
     }
 
     @Test
