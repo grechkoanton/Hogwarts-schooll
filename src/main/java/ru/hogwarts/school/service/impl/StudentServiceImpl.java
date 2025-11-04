@@ -1,6 +1,9 @@
 package ru.hogwarts.school.service.impl;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
@@ -8,6 +11,7 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.*;
 
 @Service
+@Transactional
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
@@ -54,5 +58,21 @@ public class StudentServiceImpl implements StudentService {
     public Faculty getFacultyByStudentId(Long studentId) {
         Student student = studentRepository.findById(studentId).orElse(null);
         return student != null ? student.getFaculty() : null;
+    }
+
+    @Override
+    public Integer getTotalNumberOfStudents() {
+        return studentRepository.getTotalNumberOfStudents();
+    }
+
+    @Override
+    public Double getAverageAge() {
+        return studentRepository.getAverageAge();
+    }
+
+    @Override
+    public Collection<Student> getLastFiveStudents() {
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by("id").descending());
+        return studentRepository.findAll(pageRequest).getContent();
     }
 }

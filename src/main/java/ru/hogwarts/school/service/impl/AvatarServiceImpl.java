@@ -2,6 +2,8 @@ package ru.hogwarts.school.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -68,5 +70,11 @@ public class AvatarServiceImpl implements AvatarService {
         Avatar avatar = avatarOptional.get();
         java.nio.file.Path filePath = java.nio.file.Path.of(avatar.getFilePath());
         return Files.readAllBytes(filePath);
+    }
+
+    @Override
+    public Page<Avatar> getAllAvatars(Integer page, Integer size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return avatarRepository.findAll(pageRequest);
     }
 }
