@@ -72,7 +72,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Collection<Student> getLastFiveStudents() {
-        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by("id").descending());
+        PageRequest pageRequest = PageRequest.of
+                (0, 5, Sort.by("id").descending());
         return studentRepository.findAll(pageRequest).getContent();
     }
 }
