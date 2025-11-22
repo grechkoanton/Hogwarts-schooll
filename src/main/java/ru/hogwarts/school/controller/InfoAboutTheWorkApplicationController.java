@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/info")
 @RestController
 public class InfoAboutTheWorkApplicationController {
-    @GetMapping
+
+    @GetMapping("/application")
     public ResponseEntity getInfoAboutTheWorkApplication() {
         return ResponseEntity.ok("This application is Good work!");
     }
