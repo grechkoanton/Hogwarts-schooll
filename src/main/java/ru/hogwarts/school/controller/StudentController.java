@@ -3,10 +3,11 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -32,17 +33,23 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @GetMapping
-    public ResponseEntity<Collection<Student>> findStudentsByAge(@RequestParam Integer age) {
-        if (age != null && age > 0) {
-            return ResponseEntity.ok(studentService.findByAge(age));
+    @GetMapping("/age-between")
+    public ResponseEntity<Collection<Student>> findStudentsByAgeBetween(@RequestParam int minAge, @RequestParam int maxAge) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(minAge, maxAge));
         }
-        return ResponseEntity.ok(Collections.emptyList());
-    }
 
     @GetMapping("/all")
     public ResponseEntity<Collection<Student>> getAllStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
+    }
+
+    @GetMapping("{id}/faculty")
+    public ResponseEntity<Faculty> getFacultyByStudentId(@PathVariable Long id) {
+        Faculty faculty = studentService.getFacultyByStudentId(id);
+        if (faculty == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(faculty);
     }
 
     @PutMapping("{id}")
@@ -55,9 +62,51 @@ public class StudentController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) { //ResponseEntity<Void>
+    public ResponseEntity deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/total-count")
+    public ResponseEntity<Integer> getTotalNumberOfStudents() {
+        Integer count = studentService.getTotalNumberOfStudents();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/average-age")
+    public ResponseEntity<Double> getAverageAge() {
+        Double averageAge = studentService.getAverageAge();
+        return ResponseEntity.ok(averageAge);
+    }
+
+    @GetMapping("/last-five")
+    public ResponseEntity<Collection<Student>> getLastFiveStudents() {
+        Collection<Student> students = studentService.getLastFiveStudents();
+        return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/names-starting-with-a")
+    public ResponseEntity<List<String>> getStudentNamesStartingWithA() {
+        List<String> names = studentService.getStudentNamesStartingWithA();
+        return ResponseEntity.ok(names);
+    }
+
+    @GetMapping("/average-age-stream")
+    public ResponseEntity<Double> getAverageAgeWithStream() {
+        Double averageAge = studentService.getAverageAgeWithStream();
+        return ResponseEntity.ok(averageAge);
+    }
+
+    @GetMapping("/print-parallel")
+    public ResponseEntity<String> printStudentsParallel() {
+        studentService.printStudentsParallel();
+        return ResponseEntity.ok("Parallel printing completed");
+    }
+
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<String> printStudentsSynchronized() {
+        studentService.printStudentsSynchronized();
+        return ResponseEntity.ok("Synchronized printing completed");
     }
 }
 

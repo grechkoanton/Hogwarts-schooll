@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 import java.util.Collection;
 
@@ -31,15 +32,21 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @GetMapping("/color")
-    public ResponseEntity<Collection<Faculty>> findFacultiesByColor(@RequestParam String color) {
-        Collection<Faculty> faculties = facultyService.findByColor(color);
+    @GetMapping("/filter")
+    public ResponseEntity<Collection<Faculty>> findFacultiesByNameOrColor(@RequestParam String nameOrColor) {
+        Collection<Faculty> faculties = facultyService.findByNameOrColor(nameOrColor, nameOrColor);
         return ResponseEntity.ok(faculties);
     }
 
     @GetMapping("/all")
     public ResponseEntity<Collection<Faculty>> getAllFaculties() {
         return ResponseEntity.ok(facultyService.getAllFaculties());
+    }
+
+    @GetMapping("{id}/students")
+    public ResponseEntity<Collection<Student>> getStudentsByFacultyId(@PathVariable Long id) {
+        Collection<Student> students = facultyService.getStudentsByFacultyId(id);
+        return ResponseEntity.ok(students);
     }
 
     @PutMapping("{id}")
@@ -52,9 +59,15 @@ public class FacultyController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
+    public ResponseEntity deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/longest-name")
+    public ResponseEntity<String> getLongestFacultyName() {
+        String longestName = facultyService.getLongestFacultyName();
+        return ResponseEntity.ok(longestName);
     }
 }
 
