@@ -156,4 +156,85 @@ public class StudentServiceImpl implements StudentService {
         log.debug("Average age calculated via stream: {}", averageAge);
         return averageAge;
     }
+
+    @Override
+    public void printStudentsParallel() {
+        log.info("Was invoked method for print students in parallel");
+        List<Student> students = studentRepository.findAll();
+
+        if (students.size() < 6) {
+            log.warn("Not enough students for parallel printing. Required: 6, found: {}", students.size());
+            return;
+        }
+
+        // комментарии для себя делаю и оставлю, чтоб было понимание
+        // Основной поток - имена 1 и 2 студента
+        System.out.println("Main Thread: " + students.get(0).getName());
+        System.out.println("Main Thread: " + students.get(1).getName());
+
+        // 1-ый параллельный поток - имена 3 и 4 студента
+        Thread thread1 = new Thread(() -> {
+            System.out.println("Parallel Thread-1: " + students.get(2).getName());
+            System.out.println("Parallel Thread-1: " + students.get(3).getName());
+        });
+
+        // 2-ой параллельный поток - имена 5 и 6 студента
+        Thread thread2 = new Thread(() -> {
+            System.out.println("Parallel Thread-2: " + students.get(4).getName());
+            System.out.println("Parallel Thread-2: " + students.get(5).getName());
+        });
+
+        // запуск потоков
+        thread1.start();
+        thread2.start();
+
+        // ожидание завершения потоков
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Thread was interrupted", e);
+        }
+    }
+
+    @Override
+    public void printStudentsSynchronized() {
+        log.info("Was invoked method for print students in synchronized mode");
+        List<Student> students = studentRepository.findAll();
+
+        if (students.size() < 6) {
+            log.warn("Not enough students for synchronized printing. Required: 6, found: {}", students.size());
+            return;
+        }
+
+        printStudentNameSynchronized(students.get(0).getName());
+        printStudentNameSynchronized(students.get(1).getName());
+
+        Thread thread1 = new Thread(() -> {
+            printStudentNameSynchronized(students.get(2).getName());
+            printStudentNameSynchronized(students.get(3).getName());
+        });
+
+        Thread thread2 = new Thread(() -> {
+            printStudentNameSynchronized(students.get(4).getName());
+            printStudentNameSynchronized(students.get(5).getName());
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Thread was interrupted", e);
+        }
+    }
+
+     // Синхронизированный метод для вывода имен студентов, коммент для себя
+    private synchronized void printStudentNameSynchronized(String name) {
+        System.out.println(Thread.currentThread().getName() + ": " + name);
+    }
 }

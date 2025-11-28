@@ -96,6 +96,18 @@ public class StudentController {
         Double averageAge = studentService.getAverageAgeWithStream();
         return ResponseEntity.ok(averageAge);
     }
+
+    @GetMapping("/print-parallel")
+    public ResponseEntity<String> printStudentsParallel() {
+        studentService.printStudentsParallel();
+        return ResponseEntity.ok("Parallel printing completed");
+    }
+
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<String> printStudentsSynchronized() {
+        studentService.printStudentsSynchronized();
+        return ResponseEntity.ok("Synchronized printing completed");
+    }
 }
 
 
